@@ -14,7 +14,7 @@ Supported site links :
      ```
      sudo pacman -Syyu python
      ```
-2. Install pip
+2. Install pip :
    ```
    sudo pacman -Syyu pip
    ```
