@@ -10,9 +10,13 @@ Supported site links :
 3. https://za.indeed.com/
 
 ### Setup
-1. Install Python > sudo pacman -Syyu python
-2. Install pip > sudo pacman -Syyu pip
-3. Install virtual env > python -m venv /path/to/env
-4. Activate virtual env > source venv/bin/activate
-5. Install selenium web driver > pip install selenium
-6. Install requests for restful api support > pip install requests
+1. Install Python >
+     ```
+     sudo pacman -Syyu python
+     ```
+3. Install pip
+   > sudo pacman -Syyu pip
+5. Install virtual env > python -m venv /path/to/env
+6. Activate virtual env > source venv/bin/activate
+7. Install selenium web driver > pip install selenium
+8. Install requests for restful api support > pip install requests
