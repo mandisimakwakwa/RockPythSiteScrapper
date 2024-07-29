@@ -9,7 +9,7 @@ Supported site links :
 2. https://provincialgovernment.co.za/
 3. https://za.indeed.com/
 
-### Setup
+### Linux Setup
 1. Install Python :
      ```
      sudo pacman -Syyu python
