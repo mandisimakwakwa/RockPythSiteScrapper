@@ -27,10 +27,10 @@ Supported site links :
    source venv/bin/activate
    ```
 5. Install selenium web driver :
-  ```
-  pip install selenium
-  ```
+   ```
+   pip install selenium
+   ```
 6. Install requests for restful api support :
-  ```
-  pip install requests
-  ```
+   ```
+   pip install requests
+   ```
