@@ -1,6 +1,7 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support.ui import Select
 from selenium.webdriver.support import expected_conditions as EC
 
 # from selenium.webdriver.common.keys import Keys
@@ -13,12 +14,23 @@ class ScrapperService:
     def navigateToJobsUrl(url, urlAppender):
         return url + urlAppender
 
+    def navigateToAllJobs(driver):
+
+        # 1. find element by name
+        selectEleObj = driver.find_element(By.NAME, "tblJobs_length")
+        print("response from driver find element request: ", selectEleObj)
+        # 2. use select selenium method to select based on value
+        selectedEleObj = Select(selectEleObj)
+        # 3. click element
+        selectedEleObj.select_by_value('100')
+
     def getTableData(urlAppended):
         tableData = []
-
         try:
             driver = webdriver.Chrome()
             driver.get(urlAppended)
+
+            ScrapperService.navigateToAllJobs(driver)
 
             dataElements = WebDriverWait(driver, 5).until(
                 EC.presence_of_all_elements_located(
@@ -31,20 +43,20 @@ class ScrapperService:
 
         return tableData
 
-    def getJobTitleFromPostEleData(jobPost):
+    def getJobTitleFromEleData(jobPost):
         print("job post data parse val {} on job title function", jobPost)
         return ""
 
-    def getJobLocationFromPostEleData(jobPost):
+    def getJobLocationFromEleData(jobPost):
         return ""
 
-    def getJobRenumerationFromPostEleData(jobPost):
+    def getJobRenumFromEleData(jobPost):
         return ""
 
-    def getJobClosingDateFromPostEleData(jobPost):
+    def getJobClosDateFromEleData(jobPost):
         return ""
 
-    def formatJobPostEleData(self, jobPostEleData):
+    def formatJobPostEleData(jobPostEleData):
         jobTitle = ""
         jobLocation = ""
         jobRenumeration = [""]
@@ -53,10 +65,10 @@ class ScrapperService:
         formatedElementsMap = {}
 
         for jobPost in jobPostEleData:
-            jobTitle = self.getJobTitleFromPostEleData(jobPost)
-            jobLocation = self.getJobLocationFromPostEleData(jobPost)
-            jobRenumeration = self.getJobRenumerationFromPostEleData(jobPost)
-            jobClosingDate = self.getJobClosingDateFromPostEleData(jobPost)
+            jobTitle = ScrapperService.getJobTitleFromEleData(jobPost)
+            jobLocation = ScrapperService.getJobLocationFromEleData(jobPost)
+            jobRenumeration = ScrapperService.getJobRenumFromEleData(jobPost)
+            jobClosingDate = ScrapperService.getJobClosDateFromEleData(jobPost)
 
             formatedElementsMap['title'] = jobTitle
             formatedElementsMap['location'] = jobLocation
@@ -69,9 +81,9 @@ class ScrapperService:
 
         urlAppender = "/Public/Jobs.aspx"
         urlAppended = ScrapperService.navigateToJobsUrl(url, urlAppender)
-        jobPostElementData = ScrapperService.getTableData(urlAppended)
+        jobPostEleData = ScrapperService.getTableData(urlAppended)
 
-        formattedData = self.formatJobPostEleData(self, jobPostElementData)
+        formattedData = ScrapperService.formatJobPostEleData(jobPostEleData)
 
         return formattedData
 

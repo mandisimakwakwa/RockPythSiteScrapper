@@ -11,7 +11,7 @@ class Main:
 
     def __init__(self):
         print("constructor called")
-        self.chromeServ.scrapeGPGSite(self.gpgSiteUrl)
+        Main.chromeServ.scrapeGPGSite(Main.gpgSiteUrl)
 
 
 object = Main()
