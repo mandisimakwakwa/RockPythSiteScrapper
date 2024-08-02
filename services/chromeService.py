@@ -3,15 +3,13 @@ from services import scrapperService as ScrapperService
 
 class ChromeService:
 
-    gpgSiteUrl = ""
-    provincialSiteUrl = ""
-    indeedSiteUrl = ""
-
-    scrapperService = ScrapperService()
+    scrapperServ = ScrapperService.ScrapperService()
 
     # 1. Create scrapeGPGSite function
-    def scrapeGPGSite(gpgSiteUrl):
-        print("this is a gpg site url test")
+    def scrapeGPGSite(self, gpgSiteUrl):
+        print("this is a gpg site url test val")
+        print(gpgSiteUrl)
+        self.scrapperServ.scrapeSiteGivenUrl(gpgSiteUrl)
 
     # 2. Create scrapeProvGovSite function
     def scrapeProvincialSite(provincialSiteUrl):

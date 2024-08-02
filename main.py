@@ -3,11 +3,15 @@ from services import chromeService as ChromeService
 
 class Main:
 
-    gpgSiteUrl = ""
+    gpgSiteUrl = "https://jobs.gauteng.gov.za/"
     provincialSiteUrl = ""
     indeedSiteUrl = ""
 
-    chromeServ = ChromeService()
+    chromeServ = ChromeService.ChromeService()
 
     def __init__(self):
+        print("constructor called")
         self.chromeServ.scrapeGPGSite(self.gpgSiteUrl)
+
+
+object = Main()
