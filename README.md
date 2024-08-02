@@ -6,8 +6,10 @@ The data that is scrapped from these sites is then pushed to a data file.
 
 Supported site links : 
 1. https://jobs.gauteng.gov.za/
-2. https://provincialgovernment.co.za/
-3. https://za.indeed.com/
+
+On the pipeline for support
+1. https://provincialgovernment.co.za/
+2. https://za.indeed.com/
 
 ### Arch Linux Setup
 1. Install Python :
