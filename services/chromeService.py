@@ -7,9 +7,9 @@ class ChromeService:
 
     # 1. Create scrapeGPGSite function
     def scrapeGPGSite(self, gpgSiteUrl):
-        print("this is a gpg site url test val")
-        print(gpgSiteUrl)
-        self.scrapperServ.scrapeSiteGivenUrl(gpgSiteUrl)
+        # print("this is a gpg site url test val")
+        # print("site url to scrape: ", gpgSiteUrl)
+        self.scrapperServ.scrapeSiteGivenUrl("gpg", gpgSiteUrl)
 
     # 2. Create scrapeProvGovSite function
     def scrapeProvincialSite(provincialSiteUrl):
