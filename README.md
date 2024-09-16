@@ -24,15 +24,19 @@ On the pipeline for support
    ```
    python -m venv /path/to/env
    ```
-4. Activate virtual env :
-   ```
-   source venv/bin/activate
-   ```
-5. Install selenium web driver :
+4. Install selenium web driver :
    ```
    pip install selenium
    ```
-6. Install requests for restful api support :
+5. Install requests for restful api support :
    ```
    pip install requests
+   ```
+6. Activate virtual env :
+   ```
+   source env/bin/activate
+   ```
+7. Run project :
+   ```
+   python main.py > output.txt
    ```
