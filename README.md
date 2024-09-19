@@ -11,6 +11,9 @@ On the pipeline for support
 1. https://provincialgovernment.co.za/
 2. https://za.indeed.com/
 
+Please note
+1. support for the recognition of locations for each job post is not yet implemented
+
 ### Arch Linux Setup
 1. Install Python :
      ```
