@@ -4,6 +4,9 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support.ui import Select
 from selenium.webdriver.support import expected_conditions as EC
 
+import re as regExpr
+import csv as csvMod
+
 # from selenium.webdriver.common.keys import Keys
 
 # DRIVER = webdriver.Chrome()
@@ -69,11 +72,12 @@ class ScrapperService:
         return tableData
 
     def getJobTitleFromEleData(jobPost):
-        print("job post data parse val : ", jobPost)
+
+        # print("job post data parse val : ", jobPost)
         jobTitle = jobPost.partition("Department")[0]
-        print("\n")
-        print("job title : ", jobTitle)
-        print("\n")
+        # print("\n")
+        # print("job title : ", jobTitle)
+        # print("\n")
         return jobTitle
 
     def getJobDepartmentFromEleData(jobPost):
@@ -129,8 +133,8 @@ class ScrapperService:
             if (matchRes >= 0):
                 department = govDepartment
 
-        print("department val : ", department)
-        print("\n\n")
+        # print("department val : ", department)
+        # print("\n")
 
         return department
 
@@ -138,10 +142,45 @@ class ScrapperService:
         return ""
 
     def getJobRenumFromEleData(jobPost):
-        return ""
+        # regExpr = 'R (\d{1,3}(?: \d{3})*(?:,\d{2})?) (?:- R (\d{1,3}(?: \d{3})*(?:,\d{2})?)|per annum|per annum \(All inclusive\))'
+        # renumerationPatternSingle = regExpr.compile(r'R(\d{1,3}(?:,\d{3})*(?:\.\d{2})?)')
+        # renumerationPatternMultiple = regExpr.compile(r'R (\d{1,3}(?: \d{3})*(?:,\d{2})?) (?:- R (\d{1,3}(?: \d{3})*(?:,\d{2})?)|per annum|per annum \(All inclusive\))')
+
+        # renumerationPattern = regExpr.compile(r'R(?:\s*(\d{1,3}(?: \d{3})*(?:,\d{2})?))(?:-\s*R(\d{1,3}(?: \d{3})*(?:,\d{2})?)|(?: per annum \(All inclusive\)|(?: per annum \(plus benefits\))?)|(?:\s*(\d{1,3}(?: \d{3})*(?:,\d{2})?)))')
+        renumerationPattern = regExpr.compile(r'R(?:\s*(\d{1,3}(?: \d{3})*(?:,\d{2})?))(?:-\s*R(\d{1,3}(?: \d{3})*(?:,\d{2})?)|(?: per annum \(All inclusive\)|(?: per annum \(plus benefits\))?)|(?:\s*(\d{1,3}(?: \d{3})*(?:,\d{2})?)))')
+
+        matches = renumerationPattern.findall(jobPost)
+
+        def parseRenumeration(match):
+            start_salary = match[0] or match[2]
+            end_salary = match[1] if match[1] else start_salary
+            return (f'R{start_salary}', f'R{end_salary}')
+
+        # matches = renumerationPatternSingle.findall(jobPost)
+        # if (matches == []):
+        #     matches = renumerationPatternMultiple.findall(jobPost)
+        
+        # print("renumeration matches val : ", matches)
+
+        renumerationMap = map(parseRenumeration, matches)
+
+        renumerationList = list(renumerationMap)
+        # print("renumeration list val : ", renumerationList)
+
+        # print("renumerations val : ", renumerationList)
+        # print("\n")
+
+        return renumerationList
 
     def getJobClosDateFromEleData(jobPost):
-        return ""
+
+        closingDatePattern = regExpr.compile(r'\b\d{4}/\d{2}/\d{2}\b')
+        closingDate = closingDatePattern.findall(jobPost)
+
+        # print("closingDate val : ", closingDate)
+        # print("\n\n")
+
+        return closingDate
 
     def formatJobPostEleData(jobPostEleData):
         jobTitle = ""
@@ -150,20 +189,31 @@ class ScrapperService:
         jobRenumeration = [""]
         jobClosingDate = ""
 
-        formatedElementsMap = {}
+        formattedElementsMap = {}
+        formattedJobPosts = []
+        # index = 0
 
         for jobPost in jobPostEleData:
             jobTitle = ScrapperService.getJobTitleFromEleData(jobPost)
             jobDepartment = ScrapperService.getJobDepartmentFromEleData(jobPost)
-            jobLocation = ScrapperService.getJobLocationFromEleData(jobPost)
+            # jobLocation = ScrapperService.getJobLocationFromEleData(jobPost)
             jobRenumeration = ScrapperService.getJobRenumFromEleData(jobPost)
             jobClosingDate = ScrapperService.getJobClosDateFromEleData(jobPost)
 
-            formatedElementsMap['title'] = jobTitle
-            formatedElementsMap['department'] = jobDepartment
-            formatedElementsMap['location'] = jobLocation
-            formatedElementsMap['renumeration'] = jobRenumeration
-            formatedElementsMap['closingDate'] = jobClosingDate
+            formattedElementsMap['title'] = jobTitle
+            formattedElementsMap['department'] = jobDepartment
+            # formatedElementsMap['location'] = jobLocation
+            formattedElementsMap['renumeration'] = jobRenumeration
+            formattedElementsMap['closingDate'] = jobClosingDate
+
+            # print(f"formatted job post iteration output : {formatedElementsMap} \n\n")
+
+            formattedJobPosts.append(formattedElementsMap)
+            formattedElementsMap = {}
+            # index += 1
+
+        # print("formatted Job posts : ", formattedJobPosts)
+        return formattedJobPosts
 
     def getMaxPaginVal(driver, siteJobsUrl):
         className = "//span/a[last()]"
@@ -181,6 +231,23 @@ class ScrapperService:
         # print("max pagin element text: ", maxPaginEleText)
 
         return int(maxPaginEleText)
+
+    def createCSVFile(formattedJobPosts):
+        
+        csvFile = 'jobPosts.csv'
+        csvHeaders = ["title", "department", "renumeration", "closingDate"]
+
+        # print("csv formated Job posts : ", formattedJobPosts)
+
+        with open(csvFile, 'w', newline='') as file:
+            writer = csvMod.DictWriter(file, csvHeaders)
+            writer.writeheader()
+            # writer.writerows(formattedJobPosts)
+            for jobPost in formattedJobPosts:
+                # print("job post in writer output : ", jobPost)
+                writer.writerow(jobPost)
+
+        # print(f"CSV generated to {csvFile}")
 
     def scrapeGPGSiteBySite(siteName, siteUrl):
         formattedData = []
@@ -213,7 +280,8 @@ class ScrapperService:
         return formattedData
 
     def scrapeSiteGivenUrl(self, siteName, siteUrl):
-        ScrapperService.scrapeGPGSiteBySite(siteName, siteUrl)
+        formattedJobPosts = ScrapperService.scrapeGPGSiteBySite(siteName, siteUrl)
+        ScrapperService.createCSVFile(formattedJobPosts)
 
         
 
