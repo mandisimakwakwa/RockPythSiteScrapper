@@ -2,7 +2,7 @@
 
 ## Description
 The RockPythSiteScrapper project is a project that scrapes data from south african job sites.
-The data that is scrapped from these sites is then pushed to a data file.
+The data that is scrapped from these sites is then pushed to a csv data file.
 
 Supported site links : 
 1. https://jobs.gauteng.gov.za/
